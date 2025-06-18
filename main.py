@@ -1,6 +1,7 @@
 # main.py
 from typing import Dict, List, Optional
 from fastapi import FastAPI, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from typing import Optional, List
 import base64
@@ -13,7 +14,21 @@ app = FastAPI(
     description="Automated Teaching Assistant for IIT Madras Online Degree in Data Science",
     version="1.0"
 )
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
+# Your existing endpoints
+@app.get("/")
+async def root():
+    return {"message": "API is live"}
+
+@app.post("/api/")
+async def answer_question(question_data: dict):
+    return {"answer": "Your response"}
 # Load the vector database
 db = VectorDatabase()
 if os.path.exists("tds_vector_db.index"):
